@@ -60,7 +60,7 @@ class ListMatcher:
         self._directory = directory
 
     def set_matched(self, data):
-        for d, matched in zip(data, Path(self._directory).iterdir()):
+        for d, matched in zip(data.subnodes[0].subnodes[0].subnodes, sorted(Path(self._directory).iterdir())):
             if Metakey.missing in d.metadata and d.metadata[Metakey.missing]:
                 d.metadata[Metakey.matched] = matched
 

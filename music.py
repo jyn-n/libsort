@@ -2,7 +2,7 @@ from constants import Metakey
 from pathlib import Path
 import functools
 
-from common import foreach_leaf, quote, escape, target_path
+from common import foreach_matched, quote, escape, target_path
 
 import operator
 import math
@@ -29,14 +29,14 @@ def set_metadata(data, artist, album, track):
         quote(escape(target_path(data, artist, album, track).as_posix()))
     ]))
 
+def set_metadata_on_matched(data):
+    foreach_matched(data, set_metadata)
+
 def convert_matched(data):
     def _convert(*path):
-        if Metakey.matched in path[-1].metadata:
-            convert_file(path[-1].metadata[Metakey.matched], target_path(*path))
-            set_metadata(*path)
-#TODO set metadata separately
+        convert_file(path[-1].metadata[Metakey.matched], target_path(*path))
 
-    foreach_leaf(data, _convert)
+    foreach_matched(data, _convert)
 
 def set_targets(root, library, extension):
     library.metadata[Metakey.target] = Path(root)

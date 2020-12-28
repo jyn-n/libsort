@@ -21,6 +21,14 @@ def foreach_leaf(data, action):
     for l in leaves_with_paths(data):
         action(*l)
 
+def foreach_matched(data, action):
+    def _action(*path):
+        if Metakey.matched not in path[-1].metadata:
+            return
+        return action(*path)
+
+    foreach_leaf(data, _action)
+
 def target_path(*path):
     return functools.reduce(
         operator.truediv,
